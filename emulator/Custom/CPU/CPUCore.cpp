@@ -44,7 +44,9 @@ namespace ps3clone::custom
         {
             const auto address = m_registers[ra] + static_cast<std::int64_t>(imm);
             const u32 value = static_cast<u32>(m_registers[rd]);
-            return m_memory.Write(address, &value, sizeof(value));
+            const auto result = m_memory.Write(address, &value, sizeof(value));
+            if (result != CellResult::CELL_OK) return result;
+            break;
         }
         default:
             return CellResult::CELL_ENOSYS;
