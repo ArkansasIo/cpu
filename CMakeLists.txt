@@ -7,8 +7,10 @@ cmake_minimum_required(VERSION 3.20)
 
 project(ps3clone
     VERSION 0.1.0
-    DESCRIPTION "PS3 / Cell Broadband Engine clone reference skeleton"
+    DESCRIPTION "PS3 / Cell Broadband Engine clone reference skeleton plus experimental custom CPU/GPU model"
     LANGUAGES CXX)
+
+include(CTest)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -89,6 +91,10 @@ add_executable(ps3clone ${PS3CLONE_SOURCES})
 # Headers are included as "Cell/...", "RSX/...", "common/...", so emulator/ is
 # the include root.
 target_include_directories(ps3clone PRIVATE emulator)
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 if(MSVC)
     target_compile_options(ps3clone PRIVATE /W4 /permissive-)
