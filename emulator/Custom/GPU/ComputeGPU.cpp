@@ -29,6 +29,8 @@ namespace ps3clone::custom
         if (command.elementCount > std::numeric_limits<std::uint64_t>::max() / sizeof(u32))
             return CellResult::CELL_EINVAL;
         const auto bytes = command.elementCount * sizeof(u32);
+        if (command.destination > std::numeric_limits<std::uint64_t>::max() - bytes)
+            return CellResult::CELL_EFAULT;
         if (command.operation == GPUOperation::FillU32)
         {
             for (std::size_t i = 0; i < command.elementCount; ++i)
@@ -42,8 +44,7 @@ namespace ps3clone::custom
         if (command.operation == GPUOperation::AddU32)
         {
             if (command.sourceA > std::numeric_limits<std::uint64_t>::max() - bytes ||
-                command.sourceB > std::numeric_limits<std::uint64_t>::max() - bytes ||
-                command.destination > std::numeric_limits<std::uint64_t>::max() - bytes)
+                command.sourceB > std::numeric_limits<std::uint64_t>::max() - bytes)
                 return CellResult::CELL_EFAULT;
             for (std::size_t i = 0; i < command.elementCount; ++i)
             {
